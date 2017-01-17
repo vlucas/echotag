@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Echot.js (Echo Template)
+ * echotag.js
  *
  * Simple ES6 tagged template function to render a string template with HTML markup
  */

@@ -1,7 +1,7 @@
 {
-  "name": "echot",
-  "version": "1.0.0",
-  "description": "Super simple ES6 tagged template function for printing an HTML string",
+  "name": "echotag",
+  "version": "1.0.1",
+  "description": "Simple & fast ES6 templates with no special syntax or transpilation",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"

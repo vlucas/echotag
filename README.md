@@ -1,6 +1,6 @@
-# echot.js Simple Templates
+# echotag.js - Simple ES6 Templates
 
-echot.js is a simple [ES6 tagged template
+echotag.js is a simple [ES6 tagged template
 function](https://ponyfoo.com/articles/es6-template-strings-in-depth) for
 printing HTML strings that handles common patterns like returning arrays of
 other templates.
@@ -16,12 +16,12 @@ other templates.
 
 ## Examples
 
-### 0. Require echot.js
+### 0. Require echotag.js
 
 With CommonJS/Node.js:
 
 ```javascript
-const html = require('echot/html');
+const html = require('echotag/html');
 
 let content = html`<div>Hello World!</div>`;
 ```
@@ -29,18 +29,18 @@ let content = html`<div>Hello World!</div>`;
 With ES6 Modules:
 
 ```javascript
-import { html } from 'echot';
+import { html } from 'echotag';
 
 let content = html`<div>Hello World!</div>`;
 ```
 
 ### 1. Simple Variable Replacement
 
-Since echot.js is just an ES6 tagged template function, you can use the normal
+Since echotag.js is just an ES6 tagged template function, you can use the normal
 ES6 syntax you already know in your templates:
 
 ```javascript
-const html = require('echot/html');
+const html = require('echotag/html');
 
 let world = 'World';
 let content = html`
@@ -52,12 +52,12 @@ let content = html`
 
 ### 2. Using Data Arrays
 
-Building HTML with arrays of data is similarly easy in echot.js, and is very
+Building HTML with arrays of data is similarly easy in echotag.js, and is very
 JSX-like, without the cost of transpilation. It's also way faster since it's
 just plain strings and built-in JavaScript. 😎
 
 ```javascript
-const html = require('echot/html');
+const html = require('echotag/html');
 
 let data = [
   { title: 'World' },
