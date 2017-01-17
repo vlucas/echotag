@@ -1,0 +1,21 @@
+{
+  "name": "echot",
+  "version": "1.0.0",
+  "description": "Super simple ES6 tagged template function for printing an HTML string",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "simple",
+    "template",
+    "es6",
+    "tagged",
+    "template"
+  ],
+  "author": "Vance Lucas <vance@vancelucas.com>",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "jasmine": "^2.5.3"
+  }
+}
