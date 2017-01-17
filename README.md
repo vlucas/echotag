@@ -16,12 +16,32 @@ other templates.
 
 ## Examples
 
-### 1. Simple Varable Replacement
+### 0. Require echot.js
+
+With CommonJS/Node.js:
+
+```javascript
+const html = require('echot/html');
+
+let content = html`<div>Hello World!</div>`;
+```
+
+With ES6 Modules:
+
+```javascript
+import { html } from 'echot';
+
+let content = html`<div>Hello World!</div>`;
+```
+
+### 1. Simple Variable Replacement
 
 Since echot.js is just an ES6 tagged template function, you can use the normal
 ES6 syntax you already know in your templates:
 
 ```javascript
+const html = require('echot/html');
+
 let world = 'World';
 let content = html`
   <div>
@@ -37,6 +57,8 @@ JSX-like, without the cost of transpilation. It's also way faster since it's
 just plain strings and built-in JavaScript. 😎
 
 ```javascript
+const html = require('echot/html');
+
 let data = [
   { title: 'World' },
   { title: 'Earth' }

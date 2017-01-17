@@ -1,6 +1,6 @@
 'use strict';
 
-const html = require('../index.js');
+const html = require('../html.js');
 
 
 describe('Rendering HTML', function () {
