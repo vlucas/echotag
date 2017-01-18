@@ -14,6 +14,14 @@ other templates.
  * You don't want to add complexity to your build system (Babel, TypeScript, etc.)
  * You don't need a virtual dom or reactive updates built-in (React, etc. are overkill)
 
+## Installation
+
+You can install echotag.js via NPM:
+
+```
+npm install echotag --save
+```
+
 ## Examples
 
 ### 0. Require echotag.js
@@ -71,4 +79,63 @@ let content = html`
     })}
   </ul>
 `;
+```
+
+### 3. Use with Express.js
+
+For server-side rendering, echotag.js can be a great lightweight and native
+alternative to template engines like EJS and Jade.
+
+
+```javascript
+const express = require('express');
+const html = require('echotag/html');
+
+// Start express
+const app = express();
+
+function mainLayout(params = {}) {
+  return html`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${params.title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <link href="/css/main.css" rel="stylesheet" />
+      </head>
+      <body>
+        <div class="content">
+          ${params.content}
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+
+app.get('/', function (req, res) {
+  // Prepare our content, or call a function that returns it, etc.
+  let world = 'World';
+  let content = html`
+    <div>
+      Hello ${world}!
+    </div>
+  `;
+
+  // Send content without any template engine overhead - now it's just a simple function call
+  res.send(mainLayout({ content }));
+});
+
+
+let server = app.listen(process.env.PORT || 1338, function () {
+  let host = server.address().address;
+  let port = server.address().port;
+
+  if (host === '::') {
+    host = 'localhost';
+  }
+
+  console.log('Node.js app listening at http://%s:%s', host, port);
+});
 ```
