@@ -84,16 +84,18 @@ let content = html`
 ### 3. Use with Express.js
 
 For server-side rendering, echotag.js can be a great lightweight and native
-alternative to template engines like EJS and Jade.
-
+alternative to template engines like EJS and Jade, replacing them with a simple
+function call that returns the HTML you need to render.
 
 ```javascript
 const express = require('express');
 const html = require('echotag/html');
 
-// Start express
+// Setup Express.js
 const app = express();
 
+// Define a function that returns the content wrapped in our layout HTML markup
+// NOTE: Typically, this will be in a separate file
 function mainLayout(params = {}) {
   return html`
     <!DOCTYPE html>
@@ -113,9 +115,10 @@ function mainLayout(params = {}) {
   `;
 }
 
-
+// Define a route
 app.get('/', function (req, res) {
   // Prepare our content, or call a function that returns it, etc.
+  let title = 'Hello World!';
   let world = 'World';
   let content = html`
     <div>
@@ -124,10 +127,11 @@ app.get('/', function (req, res) {
   `;
 
   // Send content without any template engine overhead - now it's just a simple function call
-  res.send(mainLayout({ content }));
+  res.send(mainLayout({ content, title }));
 });
 
 
+// Listen on port for web requests
 let server = app.listen(process.env.PORT || 1338, function () {
   let host = server.address().address;
   let port = server.address().port;
