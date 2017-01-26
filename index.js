@@ -6,6 +6,6 @@
  * Simple ES6 tagged template function to render a string template with HTML markup
  */
 
-const html = require('./html');
+const tmpl = require('./tmpl');
 
-module.exports = { html };
+module.exports = { tmpl };
