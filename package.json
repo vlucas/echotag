@@ -18,5 +18,8 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "jasmine": "^2.5.3"
+  },
+  "dependencies": {
+    "escape-html": "^1.0.3"
   }
 }

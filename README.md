@@ -3,12 +3,14 @@
 echotag.js is a simple [ES6 tagged template
 function](https://ponyfoo.com/articles/es6-template-strings-in-depth) for
 printing HTML strings that handles common patterns like returning arrays of
-other templates.
+other templates, and escapes HTML in all variables by default for XSS
+prevention (but can also explicitly allow HTML when needed).
 
 ## Use Cases
 
- * All you want to do is render HTML to a string (typically on the server side)
+ * All you want to do is render HTML to a string (in Node.js or the browser)
  * You only want to use built-in JavaScript features
+ * You want template variables to be HTML-escaped by default (XSS prevention)
  * You don't want to pay the cost of parsing or compiling templates
  * You don't want to learn a special template syntax like EJS, Jade, Underscore, etc.
  * You don't want to add complexity to your build system (Babel, TypeScript, etc.)
@@ -29,17 +31,17 @@ npm install echotag --save
 With CommonJS/Node.js:
 
 ```javascript
-const html = require('echotag/html');
+const tmpl = require('echotag').tmpl;
 
-let content = html`<div>Hello World!</div>`;
+let content = tmpl`<div>Hello World!</div>`;
 ```
 
 With ES6 Modules:
 
 ```javascript
-import { html } from 'echotag';
+import { tmpl } from 'echotag';
 
-let content = html`<div>Hello World!</div>`;
+let content = tmpl`<div>Hello World!</div>`;
 ```
 
 ### 1. Simple Variable Replacement
@@ -48,56 +50,52 @@ Since echotag.js is just an ES6 tagged template function, you can use the normal
 ES6 syntax you already know in your templates:
 
 ```javascript
-const html = require('echotag/html');
+const tmpl = require('echotag').tmpl;
 
 let world = 'World';
-let content = html`
+let content = tmpl`
   <div>
     Hello ${world}!
   </div>
 `;
 ```
 
-### 2. Using Data Arrays
+### 2. Allowing HTML In Variables (for Layouts, etc.)
 
-Building HTML with arrays of data is similarly easy in echotag.js, and is very
-JSX-like, without the cost of transpilation. It's also way faster since it's
-just plain strings and built-in JavaScript. 😎
+Since echotag.js auto-escapes HTML in variables by default, you must explicitly
+use the `:html` modifier so that the HTML tags are preserved if you want to
+allow HTML, or if you are using echotag templates within templates (i.e. for
+layouts with template content).
+
+#### Simple Example
+
+We use the `:html` modifier to explicitly allow HTML in the `world` variable:
 
 ```javascript
-const html = require('echotag/html');
+const tmpl = require('echotag').tmpl;
 
-let data = [
-  { title: 'World' },
-  { title: 'Earth' }
-];
-
-let content = html`
-  <ul>
-    ${data.map(function (world) {
-      return html`<li>Hello ${world.title}</li>`;
-    })}
-  </ul>
+let world = '<blink>World</blink>';
+let content = tmpl`
+  <div>
+    Hello ${world}:html
+  </div>
 `;
 ```
 
-### 3. Use with Express.js
+#### Example With a Layout
 
-For server-side rendering, echotag.js can be a great lightweight and native
-alternative to template engines like EJS and Jade, replacing them with a simple
-function call that returns the HTML you need to render.
+A more real-world example with a `layout` function that accepts a `title` and
+`content` parameter.
+
+The `content` parameter should allow HTML (so we can use it in our content
+templates), so we use the `:html` modifier to explicitly allow it. Any HTML in
+the `title` variable will be escaped by default.
 
 ```javascript
-const express = require('express');
-const html = require('echotag/html');
+const tmpl = require('echotag').tmpl;
 
-// Setup Express.js
-const app = express();
-
-// Define a function that returns the content wrapped in our layout HTML markup
-// NOTE: Typically, this will be in a separate file
-function mainLayout(params = {}) {
-  return html`
+function layout(params = {}) {
+  return tmpl`
     <!DOCTYPE html>
     <html>
       <head>
@@ -108,7 +106,73 @@ function mainLayout(params = {}) {
       </head>
       <body>
         <div class="content">
-          ${params.content}
+          ${params.content}:html
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+let content = tmpl`
+  <div>
+    Hello World!
+  </div>
+`;
+
+console.log(layout({ content, title: 'Homepage' }));
+```
+
+### 3. Using Data Arrays
+
+Building HTML with arrays of data is similarly easy in echotag.js, and is very
+JSX-like, without the cost of transpilation. It's also way faster since it's
+just plain strings and built-in JavaScript. 😎
+
+```javascript
+const tmpl = require('echotag').tmpl;
+
+let data = [
+  { title: 'World' },
+  { title: 'Earth' }
+];
+
+let content = tmpl`
+  <ul>
+    ${data.map(function (world) {
+      return tmpl`<li>Hello ${world.title}</li>`;
+    })}:html
+  </ul>
+`;
+```
+
+### 4. Use with Express.js
+
+For server-side rendering, echotag.js can be a great lightweight and native
+alternative to template engines like EJS and Jade, replacing them with a simple
+function call that returns the HTML you need to render.
+
+```javascript
+const express = require('express');
+const tmpl = require('echotag').tmpl;
+
+// Setup Express.js
+const app = express();
+
+// Define a function that returns the content wrapped in our layout HTML markup
+// NOTE: Typically, this will be in a separate file
+function mainLayout(params = {}) {
+  return tmpl`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${params.title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <link href="/css/main.css" rel="stylesheet" />
+      </head>
+      <body>
+        <div class="content">
+          ${params.content}:html
         </div>
       </body>
     </html>
@@ -120,7 +184,7 @@ app.get('/', function (req, res) {
   // Prepare our content, or call a function that returns it, etc.
   let title = 'Hello World!';
   let world = 'World';
-  let content = html`
+  let content = tmpl`
     <div>
       Hello ${world}!
     </div>
@@ -132,14 +196,5 @@ app.get('/', function (req, res) {
 
 
 // Listen on port for web requests
-let server = app.listen(process.env.PORT || 1338, function () {
-  let host = server.address().address;
-  let port = server.address().port;
-
-  if (host === '::') {
-    host = 'localhost';
-  }
-
-  console.log('Node.js app listening at http://%s:%s', host, port);
-});
+app.listen(process.env.PORT || 1338);
 ```
