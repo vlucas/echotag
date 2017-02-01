@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "Simple & fast ES6 templates with no special syntax or transpilation",
   "homepage": "https://github.com/vlucas/echotag",
+  "url": "https://github.com/vlucas/echotag",
   "main": "index.js",
   "scripts": {
     "test": "jasmine"
