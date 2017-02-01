@@ -1,6 +1,6 @@
 'use strict';
 
-const escapeHtml = require('escape-html');
+const config = require('./config');
 
 /**
  * echotag.js
@@ -11,11 +11,11 @@ const escapeHtml = require('escape-html');
 function tmpl(strings, ...values) {
   let output = '';
   let index = 0;
-  let modifiers = [];
+  let usedModifiers = [];
 
   for (index = 0; index < values.length; index++) {
     let valueString = values[index].toString();
-    let doEscapeHTML = true;
+    let valueModifiers = [];
 
     // Handle arrays so they don't print a bunch of commas
     if (values[index] instanceof Array) {
@@ -25,25 +25,30 @@ function tmpl(strings, ...values) {
     // Look for value modifier
     if (strings[index + 1] !== undefined) {
       let modifier = strings[index + 1];
+      let matches = modifier.match(/:[a-zA-Z]+/g);
+      valueModifiers = matches ? matches : [':default'];
 
-      if (modifier.startsWith(':html')) {
-        modifiers.push(':html');
-        doEscapeHTML = false;
+      usedModifiers = usedModifiers.concat(valueModifiers);
+    }
+
+    // Apply value modifiers
+    valueModifiers.forEach((currentModifier) => {
+      currentModifier = currentModifier.replace(':', '');
+      let modifierFn = config.getModifier(currentModifier);
+
+      if (modifierFn) {
+        valueString = modifierFn(valueString);
       }
-    }
-
-    if (doEscapeHTML) {
-      valueString = escapeHtml(valueString);
-    }
+    });
 
     output += strings[index] + valueString;
   }
 
   output += strings[index];
 
-  // Remove modifiers found in templates
-  if (modifiers.length > 0) {
-    output = modifiers.reduce((string, currentValue) => string.replace(currentValue, ''), output);
+  // Remove usedModifiers found in templates
+  if (usedModifiers.length > 0) {
+    output = usedModifiers.reduce((string, currentValue) => string.replace(currentValue, ''), output);
   }
 
   return output.trimRight();
