@@ -1,6 +1,6 @@
 'use strict';
 
-const tmpl = require('../tmpl.js');
+const tmpl = require('../src/tmpl.js');
 
 describe('Rendering parameters with HTML in them', function () {
 

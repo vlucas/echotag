@@ -31,7 +31,7 @@ npm install echotag --save
 With CommonJS/Node.js:
 
 ```javascript
-const tmpl = require('echotag/tmpl');
+const tmpl = require('echotag').tmpl;
 
 let content = tmpl`<div>Hello World!</div>`;
 ```
@@ -50,7 +50,7 @@ Since echotag.js is just an ES6 tagged template function, you can use the normal
 ES6 syntax you already know in your templates:
 
 ```javascript
-const tmpl = require('echotag/tmpl');
+const tmpl = require('echotag').tmpl;
 
 let world = 'World';
 let content = tmpl`
@@ -72,7 +72,7 @@ layouts with template content).
 We use the `:html` modifier to explicitly allow HTML in the `world` variable:
 
 ```javascript
-const tmpl = require('echotag/tmpl');
+const tmpl = require('echotag').tmpl;
 
 let world = '<blink>World</blink>';
 let content = tmpl`
@@ -92,7 +92,7 @@ templates), so we use the `:html` modifier to explicitly allow it. Any HTML in
 the `title` variable will be escaped by default.
 
 ```javascript
-const tmpl = require('echotag/tmpl');
+const tmpl = require('echotag').tmpl;
 
 function layout(params = {}) {
   return tmpl`
@@ -129,7 +129,7 @@ JSX-like, without the cost of transpilation. It's also way faster since it's
 just plain strings and built-in JavaScript. 😎
 
 ```javascript
-const tmpl = require('echotag/tmpl');
+const tmpl = require('echotag').tmpl;
 
 let data = [
   { title: 'World' },
@@ -153,7 +153,7 @@ function call that returns the HTML you need to render.
 
 ```javascript
 const express = require('express');
-const tmpl = require('echotag/tmpl');
+const tmpl = require('echotag').tmpl;
 
 // Setup Express.js
 const app = express();
