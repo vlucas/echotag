@@ -14,7 +14,7 @@ function tmpl(strings, ...values) {
   let usedModifiers = [];
 
   for (index = 0; index < values.length; index++) {
-    let valueString = values[index].toString();
+    let valueString = values[index] === undefined ? '' : values[index].toString();
     let valueModifiers = [];
 
     // Handle arrays so they don't print a bunch of commas

@@ -46,4 +46,11 @@ describe('Rendering HTML', function () {
     expect(content).toEqual(expected);
   });
 
+  it('should not choke on undefined variable', function () {
+    let world = undefined;
+    let content = tmpl`<div>Hello ${world}!</div>`;
+
+    expect(content).toEqual('<div>Hello !</div>');
+  });
+
 });
