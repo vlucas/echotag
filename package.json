@@ -1,6 +1,6 @@
 {
   "name": "echotag",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Simple & fast ES6 templates with no special syntax or transpilation",
   "homepage": "https://github.com/vlucas/echotag",
   "url": "https://github.com/vlucas/echotag",
